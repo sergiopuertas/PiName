@@ -46,14 +46,23 @@ st.markdown(f"<h1 style='text-align: center; font-size: 5rem;'>PiName</h1>",
 st.header("Encuentra tu nombre entre los dígitos de Pi")
 
 # Text input for the name
-name = st.text_input("Ingresa tu nombre", key="pi_name",
-                     help="Tu nombre se convierte una cadena numérica donde cada letra se reemplaza"
+name = st.text_input("Ingresa tu nombre")
+cols = st.columns((4,2,1))
+with cols[0]:
+    alg = st.radio(f"¿Qué tipo de codificación quieres para tu nombre?", ["Compleja", "Simple"], horizontal=True,help=
+    "**Compleja**: tu nombre se convierte a una cadena numérica donde cada letra se reemplaza"
     " por su posición en la clasificación de letras del alfabeto español por frecuencia de aparición: a, e, o, i, n, l,"
     " s, r, m, d, c, u, t, p, b, g, y, j, h, v, z, q, f, ñ, x, k, w. "
-    "Luego, se convierten a número en base 27 para compactarlo lo máximo posible.",placeholder=None)
-num = texto_a_numeros(name)
+    "Luego, se convierten a un número en base 27 y se obtiene el resultado final. De este modo, es posible que más "
+    "nombres aparezcan en la cadena y sin colisiones (dos nombres diferentes no van a tener el mismo código).\n\n"
+    "**Simple**: tu nombre se convierte a una cadena numérica donde cada letra se reemplaza"
+    " por su posición en el alfabeto español normal. Más intuitivo pero puede que menos nombres salgan representados")
 
-if name != "":
+with cols[2]:
+    click = st.button("Buscar", key="search")
+
+if click and name != "":
+    num = texto_a_numeros(name, alg)
     st.write(f"Representación numérica del nombre: {format_num(num)}")
     status = st.status("Buscando coincidencia en los dígitos de π...", expanded=True)
     result, text = buscar_en_pi(num,status)
