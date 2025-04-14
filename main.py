@@ -71,18 +71,19 @@ if click and name != "":
         status.update(label="🚫 Coincidencia no encontrada", state="error")
         st.write("No se encontró tu nombre en los primeros mil millones de dígitos de π. ¡Un nombre muy peculiar!. Tal vez algún diminutivo o apodo sí lo esté 🧐")
     elif text is not None and num is not None:
+       st.balloons()
        result_formatted = format_num(result)
        st.container(height=30,border=False)
        st.markdown(f"<h2 style='text-align: center; font-size: 2rem;'>Tu nombre fue encontrado en la posición:</h2>", unsafe_allow_html=True)
        st.markdown(f"<h2 style='text-align: center; font-size: 3rem;'><strong>{result_formatted}</strong></h2>", unsafe_allow_html=True)
        st.container(height=10,border=False)
 
-       init = "3.141592..." if text[:6]!="3.1415" else ""
-
        if result == 1:
-           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {init}{f'<strong>3.</strong>'}{str(text[2:]).replace(num[1:], f'<strong>{num[1:]}</strong>',1)}...</p>", unsafe_allow_html=True)
+           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {f'<strong>3.</strong>'}{str(text[2:]).replace(num[1:], f'<strong>{num[1:]}</strong>',1)}...</p>", unsafe_allow_html=True)
+       elif result < 7:
+           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
        else:
-           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {init}{str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
+           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = ...{str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 
