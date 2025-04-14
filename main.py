@@ -63,20 +63,26 @@ with cols[2]:
 
 if click and name != "":
     num = texto_a_numeros(name, alg)
-    st.write(f"Representación numérica del nombre: {format_num(num)}")
+    st.write(f"Representación numérica del nombre: **{format_num(num)}**")
     status = st.status("Buscando coincidencia en los dígitos de π...", expanded=True)
     result, text = buscar_en_pi(num,status)
     status.update(label="✅ Coincidencia encontrada", state="complete")
     if result == -1:
         status.update(label="🚫 Coincidencia no encontrada", state="error")
-        st.write("No se encontró tu nombre en los primeros mil millones de dígitos de Pi. ¡Un nombre muy peculiar!")
+        st.write("No se encontró tu nombre en los primeros mil millones de dígitos de π. ¡Un nombre muy peculiar!. Tal vez algún diminutivo o apodo sí lo esté 🧐")
     elif text is not None and num is not None:
        result_formatted = format_num(result)
        st.container(height=30,border=False)
        st.markdown(f"<h2 style='text-align: center; font-size: 2rem;'>Tu nombre fue encontrado en la posición:</h2>", unsafe_allow_html=True)
        st.markdown(f"<h2 style='text-align: center; font-size: 3rem;'><strong>{result_formatted}</strong></h2>", unsafe_allow_html=True)
        st.container(height=10,border=False)
-       st.markdown(f"<p style='text-align: center; font-size: 2rem;'>3.141592...{str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
+
+       init = "3.141592..." if text[:6]!="3.1415" else ""
+
+       if result == 1:
+           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {init}{f'<strong>3.</strong>'}{str(text[2:]).replace(num[1:], f'<strong>{num[1:]}</strong>',1)}...</p>", unsafe_allow_html=True)
+       else:
+           st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {init}{str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
 
 st.markdown("</div>", unsafe_allow_html=True)
 

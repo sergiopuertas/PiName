@@ -49,8 +49,9 @@ def buscar_en_pi(pattern,_status, url="https://stuff.mit.edu/afs/sipb/contrib/pi
 
     with requests.get(url, stream=True) as r:
         for chunk in r.iter_content(chunk_size=buffer_size):
+
             text = remainder + chunk.decode('utf-8', errors='ignore')
-            idx = text.find(pattern)
+            idx = text.replace(".","").find(pattern)
             if idx != -1:
                 start_context = max(0, idx - 5)
                 end_context = idx + len(pattern) + 5
