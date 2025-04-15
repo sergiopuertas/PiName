@@ -1,6 +1,13 @@
 import streamlit as st
 import requests
 
+def togglebutton():
+    """
+    Crea un botón de alternancia (toggle button) en Streamlit.
+    """
+    st.session_state.is_searching = not st.session_state.is_searching
+
+
 def format_num(num):
     """
     Formatea un número entero a una cadena con separadores de miles.
@@ -63,3 +70,25 @@ def buscar_en_pi(pattern,_status, url="https://stuff.mit.edu/afs/sipb/contrib/pi
             result_formatted = format_num(position)
             _status.update(label = f"🔍 Explorados hasta ahora: `{result_formatted}` dígitos...")
     return -1 , None  # no encontrado
+
+
+"""
+Reference:
+https://www.angio.net/pi/whynotpi.html
+"""
+def estimar_probabilidad(longitud: int) -> float:
+    if longitud <= 6:
+        return 1.0
+    elif longitud == 7:
+        return 0.9999995
+    elif longitud == 8:
+        return 0.9995
+    elif longitud == 9:
+        return 0.63
+    elif longitud == 10:
+        return 0.095
+    elif longitud == 11:
+        return 0.01
+    else:
+        return 0.001  # menor al 0.1% para 12 o más
+
