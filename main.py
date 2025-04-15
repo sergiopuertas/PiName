@@ -73,8 +73,9 @@ with cols[2]:
 num = texto_a_numeros(name, alg)
 prob = estimar_probabilidad(len(num))
 # Mostrar barra de progreso
-st.write("Probabilidad estimada de aparición (1,000,000,000 dígitos):")
-st.progress(prob, text=f"{prob*100:.3f}%")
+if name != "":
+    st.write("Probabilidad estimada de aparición (1,000,000,000 dígitos):")
+    st.progress(prob, text=f"{prob*100:.3f}%")
 if st.session_state.is_searching and name != "":
     st.write(f"Representación numérica del nombre: **{format_num(num)}**")
     status = st.status("Buscando coincidencia en los dígitos de π...", expanded=True)
