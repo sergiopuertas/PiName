@@ -1,5 +1,4 @@
-import streamlit as st
-from lib import buscar_en_pi, texto_a_numeros, format_num
+from lib import *
 
 # Set the page configuration
 st.set_page_config(
@@ -49,20 +48,34 @@ st.header("Encuentra tu nombre entre los dígitos de Pi")
 name = st.text_input("Ingresa tu nombre")
 cols = st.columns((4,2,1))
 with cols[0]:
-    alg = st.radio(f"¿Qué tipo de codificación quieres para tu nombre?", ["Compleja", "Simple"], horizontal=True,help=
+    alg = st.radio(f"¿Qué tipo de codificación quieres para tu nombre?", ["Simple","Compleja"], horizontal=True,help=
+    "**Simple**: tu nombre se convierte a una cadena numérica donde cada letra se reemplaza"
+    " por su posición en el alfabeto español normal. Más intuitivo pero puede que menos nombres salgan representados\n\n"
     "**Compleja**: tu nombre se convierte a una cadena numérica donde cada letra se reemplaza"
     " por su posición en la clasificación de letras del alfabeto español por frecuencia de aparición: a, e, o, i, n, l,"
     " s, r, m, d, c, u, t, p, b, g, y, j, h, v, z, q, f, ñ, x, k, w. "
     "Luego, se convierten a un número en base 27 y se obtiene el resultado final. De este modo, es posible que más "
-    "nombres aparezcan en la cadena y sin colisiones (dos nombres diferentes no van a tener el mismo código).\n\n"
-    "**Simple**: tu nombre se convierte a una cadena numérica donde cada letra se reemplaza"
-    " por su posición en el alfabeto español normal. Más intuitivo pero puede que menos nombres salgan representados")
+    "nombres aparezcan en la cadena y sin colisiones (dos nombres diferentes no van a tener el mismo código).")
 
 with cols[2]:
-    click = st.button("Buscar", key="search")
+    if "is_searching" not in st.session_state:
+        st.session_state.is_searching = False
 
-if click and name != "":
-    num = texto_a_numeros(name, alg)
+    if st.session_state.is_searching:
+        stop = st.button("Reiniciar", key="stop",on_click=togglebutton)
+        if stop:
+            st.session_state.is_searching = False
+    else:
+        click = st.button("Buscar", key="search", on_click=togglebutton)
+        if click:
+            st.session_state.is_searching = True
+
+num = texto_a_numeros(name, alg)
+prob = estimar_probabilidad(len(num))
+# Mostrar barra de progreso
+st.write("Probabilidad estimada de aparición (1,000,000,000 dígitos):")
+st.progress(prob, text=f"{prob*100:.3f}%")
+if st.session_state.is_searching and name != "":
     st.write(f"Representación numérica del nombre: **{format_num(num)}**")
     status = st.status("Buscando coincidencia en los dígitos de π...", expanded=True)
     result, text = buscar_en_pi(num,status)
@@ -84,6 +97,7 @@ if click and name != "":
            st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = {str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
        else:
            st.markdown(f"<p style='text-align: center; font-size: 2rem;'> π = ...{str(text).replace(num, f'<strong>{num}</strong>')}...</p>", unsafe_allow_html=True)
+
 
 st.markdown("</div>", unsafe_allow_html=True)
 
